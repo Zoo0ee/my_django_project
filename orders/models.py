@@ -1,15 +1,12 @@
+# orders/models.py
 from django.db import models
+from products.models import Product
 
 class Order(models.Model):
-    STATUS_CHOICES = [
-        ('PENDING', 'Pending'),
-        ('COMPLETED', 'Completed'),
-        ('CANCELLED', 'Cancelled'),
-    ]
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
+    product = models.ForeignKey(Product, related_name='orders', on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    status = models.CharField(max_length=255, default='Pending')
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Order {self.id} - {self.status}"
+        return f'Order #{self.id} - {self.product.name}'
